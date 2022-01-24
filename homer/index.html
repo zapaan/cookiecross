@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const xhr = new XMLHttpRequest();
+            // listen for `load` event
+            xhr.onload = () => {
+                // print JSON response
+                document.getElementById("foo").textContent = xhr.responseText
+            };
+            // open request
+            xhr.open('GET', 'https://localho.st/api/get');
+            // set `Content-Type` header
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            // send rquest with JSON payload
+            xhr.send();
+        });
+    </script>
+</head>
+<body>
+    <span id="foo"></span>
+</body>

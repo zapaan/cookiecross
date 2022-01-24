@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(event) {
+            bind(document.querySelectorAll('input')[0])
+            bind(document.querySelectorAll('input')[1])
+            
+            function bind(obj){
+                obj.addEventListener("click", function(event) {
+                    console.log("click")
+                    const xhr = new XMLHttpRequest();
+                    // listen for `load` event
+                    xhr.onload = () => {
+                        // print JSON response
+                        document.getElementById("foo").textContent = xhr.responseText
+                    };
+                    // create a JSON object
+                    const json = {
+                        "tracking": document.getElementById("t").checked,
+                        "not_tracking": document.getElementById("not").checked
+                    };
+                    // open request
+                    xhr.open('POST', 'https://localho.st/api/set');
+                    // set `Content-Type` header
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    // send rquest with JSON payload
+                    xhr.send(JSON.stringify(json));
+                    document.getElementById("bar").textContent = JSON.stringify(json)
+
+                });
+            }
+        })
+    </script>
+</head>
+<body>
+    <input type="checkbox" id="t" name="t"/>
+    <label for="t">tracking: </label>
+    <input type="checkbox" id="not" name="not"/>
+    <label for="not">not tracking: </label>
+    <p>Resquest: <span id="bar"></span></p>
+    <p>Response: <span id="foo"></span></p>
+</body>

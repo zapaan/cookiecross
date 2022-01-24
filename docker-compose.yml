@@ -1,0 +1,33 @@
+version: '3.4'
+services:
+    reverse-proxy:
+      # The official v2.0 Traefik docker image
+      image: traefik:v2.0
+      # Enables the web UI and tells Traefik to listen to docker
+      command: --api.insecure=true --providers.docker
+      ports:
+        - "80:80"
+        - "8080:8080"
+      volumes:
+        # So that Traefik can listen to the Docker events
+        - /var/run/docker.sock:/var/run/docker.sock
+  
+    homer:
+      depends_on: [ reverse-proxy ]
+      image: python:3.10
+      command: python  /code/server.py -d /code/homer 8080
+      volumes:
+        - ./:/code
+      labels:
+        - "traefik.http.routers.homer.rule=Host(`hom.er`)"
+        - traefik.http.services.homer.loadbalancer.server.port=8080
+
+    dalor:
+      depends_on: [ reverse-proxy ]
+      image: python:3.10
+      command: python /code/server.py -d /code/dalor 8080
+      volumes:
+        - ./:/code
+      labels:
+        - "traefik.http.routers.dalor.rule=Host(`dal.or`)"
+        - traefik.http.services.dalor.loadbalancer.server.port=8080
